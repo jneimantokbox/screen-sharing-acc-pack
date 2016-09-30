@@ -8,17 +8,19 @@ This package provides an easy way to get started in implementing interoperable s
 
 ###Installation:
 
+If you are using npm, use the command prompt to enter:
+
 ```bash
 $ npm install --save opentok-annotation
 ```
 
-If using browserify or webpack:
+If you are using browserify or webpack, enter:
 
 ```javascript
 const screenSharing = require('opentok-screen-sharing');
 ```
 
-Otherwise, include the accelerator pack in your html:
+Then, include the accelerator pack in your html:
 
 ```html
 <script src="../your/path/to/opentok-screen-sharing.js"></script>
