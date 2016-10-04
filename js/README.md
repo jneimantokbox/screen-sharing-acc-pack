@@ -1,7 +1,7 @@
 
-![logo](https://raw.githubusercontent.com/opentok/annotation-acc-pack/2.0.0/tokbox-logo.png)
+![logo](https://raw.githubusercontent.com/opentok/annotation-acc-pack/1.1.0/tokbox-logo.png)
 
-# OpenTok Screensharing Accelerator Pack for JavaScript<br/>Version 2.0.0
+# OpenTok Screensharing Accelerator Pack for JavaScript<br/>Version 1.1.0
 
 ## Quick start
 
@@ -15,13 +15,9 @@ This section shows you how to:
 
 To learn how to use the acc pack, download and examine a sample app project that uses the the OpenTok Screensharing Accelerator Pack: 
 
-1. Visit the [OpenTok Screensharing with Annotations Sample repo](https://github.com/opentok/screensharing-annotation-acc-pack).
+1. Visit the [OpenTok Screensharing with Annotations Sample App](https://github.com/opentok/one-to-one-screen-annotations-sample-apps).
 1. Follow the instructions downloading and deploying the sample app.
-1. Look at the sample app code in the `*./one-to-one-screen-annotations-sample-apps-master\ 3/JS/sample-app' subfolder.
-
-### Get the acc pack files and add them a project
-
-This package provides an easy way to get started in implementing interoperable screen sharing using the OpenTok platform.  For usage details, take a look at the [Screensharing with Annotations Sample App](https://github.com/opentok/screensharing-annotation-acc-pack/tree/master/JS).
+1. Look at the sample app code in the `*./one-to-one-screen-annotations-sample-apps/JS/sample-app' subfolder.
 
 
 ### Install the acc pack files
@@ -49,20 +45,6 @@ Then, include the accelerator pack in your html:
 
 Click [here](https://www.npmjs.com/search?q=opentok-acc-pack) for a list of all npm OpenTok accelerator packs.
 
-### Configuring the app
-
-Add the following configuration details to your app. These will include the **Session ID**, **Token**, and **API Key** you retrieved from your Developer dashboard. For more information, see [OpenTok Screensharing Accelerator Pack](../)
-
-In **app.js**, replace the following empty strings with the required detail:
-
-
-   ```javascript
-    apiKey: '',    // Replace with your OpenTok API Key
-    sessionId: '', // Replace with a generated Session ID
-    token: '',     // Replace with a generated token (from the dashboard or using an OpenTok server SDK)
-   ```
-
-_At this point you can try running the app! See [Deploying and running](#deploying-and-running) for more information._
 
 ### Deploying and running
 

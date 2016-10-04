@@ -1,6 +1,6 @@
 ![logo](../tokbox-logo.png)
 
-# OpenTok Screensharing Accelerator Pack for iOS<br/>Version 2.0.0
+# OpenTok Screensharing Accelerator Pack for iOS<br/>Version 1.1.0
 
 ## Quick start
 
@@ -12,7 +12,7 @@ This section shows you how to:
 
 To learn how to use the acc pack, download and examine a sample app project that uses the the OpenTok Screensharing Accelerator Pack: 
 
-1. Download or clone the Clone the [OpenTok Screensharing with Annotations Sample repo](https://github.com/opentok/screensharing-annotation-acc-pack).
+1. Download or clone the Clone the [OpenTok Screensharing with Annotations Sample App](https://github.com/opentok/one-to-one-screen-annotations-sample-apps).
 1. In a terminal prompt, navigate to your project directory and type `pod install`.
 2. Reopen your project using the new `*.xcworkspace` file.
 
@@ -20,25 +20,6 @@ For more information about CocoaPods, including installation instructions, visit
 
 _At this point you can try running the app! You can either use a simulator or an actual mobile device._
 
-### Configuring the app
-
-Now you are ready to add the configuration detail to your app. For more information about getting this information, see [OpenTok Screensharing Accelerator Pack](../)
-
-In **AppDelegate.h**, replace the following empty strings with the required detail:
-
-
-```objc
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-	  // Override point for customization after application launch.    
-    [OTScreenSharer setOpenTokApiKey:@""
-                           sessionId:@""
-                               token:@""];
-  	return YES;
-}
-```
-
-_At this point you can try running the app! You can either use a simulator or an actual mobile device._
 
 ## Exploring the code
 
@@ -57,7 +38,6 @@ The following classes, interfaces, and protocols represent the software design f
 
 | Class        | Description  |
 | ------------- | ------------- |
-| `MainViewController`   | In conjunction with **Main.storyboard**, this class uses the OpenTok API to initiate the client connection to the OpenTok session, and implements the sample UI and screensharing callbacks.   |
 | `OTScreenSharer`   | This component enables the publisher to share either the entire screen or a specified portion of the screen. |
 | `OTAnnotationScrollView` | Provides the initializers and methods for the client annotating views. |
 | `OTAnnotationToolbarView`   | A convenient annotation toolbar that is optionally available for your development. As an alternative, you can create your toolbar using `OTAnnotationScrollView`. See the [OpenTok Annotations Accelerator Pack](https://github.com/opentok/annotation-acc-pack) for more information. |
