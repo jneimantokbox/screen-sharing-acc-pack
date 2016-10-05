@@ -116,6 +116,7 @@ public class ScreenSharingFragment extends Fragment implements AccPackSession.Se
             mAnnotationsView = null;
             stop();
             removeScreensharingBar();
+            mListener.onClosed();
         }
         addLogEvent(OpenTokConfig.LOG_ACTION_CLOSE, OpenTokConfig.LOG_VARIATION_SUCCESS);
     }
@@ -155,19 +156,10 @@ public class ScreenSharingFragment extends Fragment implements AccPackSession.Se
         void onAnnotationsViewReady(AnnotationsView view);
 
         /**
-         * Invoked when the remote annotations view is ready.
-         *
-         * @param view The remote annotations view.
-         */
-
-        void onAnnotationsRemoteViewReady(AnnotationsView view);
-
-        /**
-         * Invoked when the close button is clicked.
+         * Invoked when the screensharing has been closed.
          *
          */
         void onClosed();
-
     }
 
     /*
@@ -385,27 +377,6 @@ public class ScreenSharingFragment extends Fragment implements AccPackSession.Se
     }
 
     /*
-   * Enable or disable the annotations in the remote.
-   * @param annotationsEnabled <code>true</code> if remote annotations are enabled; <code>false</code> otherwise.
-   * @param toolbar The annotations toolbar.
-   */
-    public void enableRemoteAnnotations(boolean annotationsEnabled, AnnotationsToolbar toolbar, ViewGroup view, Subscriber subscriber) {
-        //TODO connectionId from STREAM instead of sessioonconnectionId
-        AnnotationsView remoteAnnotationsView = new AnnotationsView(getContext(), mSession, mApiKey, false, AnnotationsView.ViewType.SubscriberView, subscriber.getStream().getConnection().getConnectionId());
-
-        AnnotationsVideoRenderer renderer = new AnnotationsVideoRenderer(getContext());
-        subscriber.setRenderer(renderer);
-        remoteAnnotationsView.setVideoRenderer(renderer);
-
-        mRemoteAnnotationsToolbar = toolbar;
-        remoteAnnotationsView.attachToolbar(mRemoteAnnotationsToolbar);
-        isRemoteAnnotationsEnabled  = annotationsEnabled;
-
-        onAnnotationsRemoteViewReady(remoteAnnotationsView);
-        ((ViewGroup)view).addView(remoteAnnotationsView);
-    }
-
-    /*
     * Enable or disable the audio in the screensharing.
     * @param enabled <code>true</code> if  the audio is enabled; <code>false</code> otherwise.
     */
@@ -526,21 +497,9 @@ public class ScreenSharingFragment extends Fragment implements AccPackSession.Se
         }
     }
 
-    protected void onClosed(){
-        if ( mListener != null ){
-            mListener.onClosed();
-        }
-    }
-
     protected void onAnnotationsViewReady(AnnotationsView view){
         if ( mListener != null ){
             mListener.onAnnotationsViewReady(view);
-        }
-    }
-
-    protected void onAnnotationsRemoteViewReady(AnnotationsView view){
-        if ( mListener != null ){
-            mListener.onAnnotationsRemoteViewReady(view);
         }
     }
 
@@ -575,31 +534,34 @@ public class ScreenSharingFragment extends Fragment implements AccPackSession.Se
         onScreenSharingStarted();
         checkAnnotations();
         isStarted = true;
-
-        if ( isAnnotationsEnabled ) {
-            if (mAnnotationsView == null) {
-                mAnnotationsView = new AnnotationsView(getContext(), mSession, mApiKey, true, AnnotationsView.ViewType.PublisherView);
-                mAnnotationsView.attachToolbar(mAnnotationsToolbar);
-                mAnnotationsView.setVideoRenderer(mRenderer); //to use screencapture
+        try {
+            if ( isAnnotationsEnabled ) {
+                if (mAnnotationsView == null) {
+                    mAnnotationsView = new AnnotationsView(getContext(), mSession, mApiKey, true, mScreenPublisher);
+                    mAnnotationsView.attachToolbar(mAnnotationsToolbar);
+                    mAnnotationsView.setVideoRenderer(mRenderer); //to use screencapture
+                }
+                onAnnotationsViewReady(mAnnotationsView);
+                mScreen.addView(mAnnotationsView);
             }
-            onAnnotationsViewReady(mAnnotationsView);
-            mScreen.addView(mAnnotationsView);
+            mScreensharingBar = new ScreenSharingBar(getContext(), this);
+
+            //add screensharing bar on top of the screen
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_APPLICATION_PANEL,
+                    0 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+            params.gravity = Gravity.LEFT | Gravity.TOP;
+            params.x = 0;
+            params.y = 0;
+
+            WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            wm.addView(mScreensharingBar, params);
+        }catch(Exception e){
+            Log.i(LOG_TAG, "Exception - onStreamCreated "+e);
         }
-        mScreensharingBar = new ScreenSharingBar(getContext(), this);
-
-        //add screensharing bar on top of the screen
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION_PANEL,
-                0 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.LEFT | Gravity.TOP;
-        params.x = 0;
-        params.y = 0;
-
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        wm.addView(mScreensharingBar, params);
     }
 
     @Override
@@ -609,8 +571,8 @@ public class ScreenSharingFragment extends Fragment implements AccPackSession.Se
         mScreen.removeView(mAnnotationsView);
         checkAnnotations();
         onScreenSharingStopped();
-        onClosed();
         isStarted = false;
+        mAnnotationsView = null;
     }
 
     @Override
