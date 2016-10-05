@@ -8,12 +8,10 @@ This section shows you how to:
 * Examine a sample app to see how it uses this accelerator pack.
 * Import the accelerator pack into a project you are developing.
 
-**Note**: OpenTok Screensharing requires Android Lollipop or later.
-
 
 ### Examine how the sample app uses the acc pack
 
-To learn how to use the acc pack, download and examine a sample app project that uses the the OpenTok Screensharing Accelerator Pack: 
+To learn how to use the acc pack, download and examine a sample app project that uses the the OpenTok Screensharing Accelerator Pack:
 
 1. Download or clone the [OpenTok Screensharing with Annotations Sample repo](https://github.com/opentok/one-to-one-screen-annotations-sample-apps).
 1. In Android Studio's **Quick Start** panel, click **Open an existing Android Studio Project**.
@@ -46,7 +44,7 @@ compile project(':screensharing-acc-pack-kit')
 
 1. Modify the `build.gradle` for your activity and add the following code snippet to the section labeled 'dependencies’:
 
-`compile 'com.opentok.android:screensharing-acc-pack-kit:1.1.0'`
+`compile 'com.opentok.android:opentok-screensharing-annotations:1.1.0'`
 
   _**NOTE**: Since dependencies are transitive with Maven, it is not necessary to explicitly reference the TokBox Common Accelerator Session Pack with this option._
 
@@ -54,7 +52,7 @@ compile project(':screensharing-acc-pack-kit')
 #### Downloading and Installing the AAR File
 
 1.  Download the [Screensharing Accelerator Pack zip file](https://s3.amazonaws.com/artifact.tokbox.com/solution/rel/screensharing-acc-pack-kit/android/opentok-screensharing-acc-pack-kit-1.1.0.zip) containing the AAR file and documentation.
-1. Extract the **opentok-screensharing-acc-pack-kit-1.1.0.aar** file.
+1. Extract the **opentok-screensharing-annotations-1.1.0.aar** file.
 1. Right-click the app name and select **Open Module Settings** and click **+**.
 1.  Select **Import .JAR/.AAR Package** and click  **Next**.
 1.  Browse to the **Screensharing Accelerator Pack library AAR** and click **Finish**.
@@ -83,12 +81,14 @@ The following classes represent the software design for this sample app, focusin
 | `ScreenSharingBar`   | Initializes the screensharing toolbar and its UI controls. |
 | `ScreenPublisher`   | Provides TokBox support for displaying shared screen content. |
 
+The screensharing toolbar appears when you call `start()`. You can customize the `ScreenSharingBar` by overriding the `ScreenSharingBar` and `ScreenSharingBarListener` classes, or by directly modifying them. Note that this ScreenSharing library allows you to share the app screen but doesn't allow you to share the device screen.
+
 
 ###  Screensharing Accelerator Pack
 
 The `ScreenSharingFragment` class is the backbone of the screensharing features for the app. It serves as a controller for the screensharing UI widget and initializes such functionality as stroke color and scrolling features. It uses the [`android.media.projection.MediaProjection`](http://developer.android.com/reference/android/media/projection/MediaProjection.html), supported on Android Lollipop, and provides the projection callbacks needed for screensharing.
 
-This class, which inherits from the [`android.support.v4.app.Fragment`](http://developer.android.com/intl/es/reference/android/support/v4/app/Fragment.html) class, sets up the screensharing UI views and events, sets up session listeners, and defines a listener interface that is implemented in the app that uses the library.
+This class, which inherits from the [`android.support.v4.app.Fragment`](http://developer.android.com/intl/es/reference/android/support/v4/app/Fragment.html) class and is implemented in the app using the library, sets up the screensharing UI views and events, sets up session listeners, and defines a listener interface.
 
 ```java
 public class ScreenSharingFragment
@@ -117,6 +117,7 @@ public interface ScreenSharingListener {
 }
 ```
 
+Note that the screensharing library contains methods to add screensharing features to your apps, as well as the option to enable annotations in the screensharing features.
 
 #### Initialization methods
 
@@ -127,14 +128,14 @@ The following `ScreenSharingFragment` methods are used to initialize the app and
 | Start screen capture.   | `start()`  |
 | Stop screen capture.  | `stop()`  |
 | Set the listener object to monitor state changes.   | `setListener()` |
-| Check whether screensharing has started. Return true if screensharing started, false otherwise. | isStarted |
-| Enable or disable the annotations in the screensharing. | enableAnnotations(boolean annotationsEnabled, AnnotationsToolbar toolbar) |
-| Enable or disable the audio in the screensharing. | enableAudioScreensharing(boolean enabled) |
+| Check whether screensharing has started. Return `true` if screensharing started, `false` otherwise. | `isStarted()` |
+| Enable or disable the annotations in the screensharing. | `enableAnnotations(boolean annotationsEnabled, AnnotationsToolbar toolbar)` |
+| Enable or disable the audio in the screensharing. | `enableAudioScreensharing(boolean enabled)` |
 
 
 ### User interface
 
-As described in [Class design](#class-design), the `ScreenSharingFragment` class sets up and manages the UI views, events, and rendering for the screensharing controls.
+As described in [Class design](#class-design), the `ScreenSharingFragment` class sets up and manages the UI views, events, and rendering for the screensharing controls. The screensharing bar can be customized, and the different Screensharing callbacks allow to the app to manage the status changes using the screensharing kit. For example, status changes can indicate when the app has started or ended. You can adapt the UI in the sample-app to implement these changes.
 
 This class works with the following `MainActivity` methods, which manage the views as both clients participate in the session.
 
@@ -151,3 +152,5 @@ To develop a screensharing app:
 
 1. Install [Android Studio](http://developer.android.com/intl/es/sdk/index.html).
 2. Review the [OpenTok Android SDK Requirements](https://tokbox.com/developer/sdks/android/#developerandclientrequirements).
+
+**Note**: OpenTok Screensharing requires Android Lollipop or later.
